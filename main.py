@@ -12,8 +12,8 @@ def start_message(message):
 def photo_message(message):
 	response = requests.get('https://yande.re/post.json?limit=1')
 	Json = response.json()
-	print(Json[0]["file_url"])
-	bot.send_photo(message.chat.id, str(Json[0]["file_url"]))    
+	print(Json)
+	bot.send_photo(message.chat.id, Json[0]["sample_url"])    
 
 
 bot.polling()
