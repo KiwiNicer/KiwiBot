@@ -4,7 +4,7 @@ import xml.etree.cElementTree as ET
 
 bot = telebot.TeleBot('Токен сюда')
 
-tags=["no_bra", "tits", "boobs", "anus", "pussy", "uncensored", "censored", "open shirt", "trap", "yaoi", "cum", "penis", "milk", "pantsu","sex"] 
+tags=["no_bra", "tits", "boobs", "anus", "pussy", "uncensored", "censored", "open_shirt", "trap", "yaoi", "cum", "penis", "milk", "pantsu", "sex"] 
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
