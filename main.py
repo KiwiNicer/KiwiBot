@@ -19,7 +19,10 @@ async def start_command(message: types.Message):
 @dp.message_handler(commands=['settings'])
 async def settings_command(message: types.Message):
     logging.info(str(message.from_user.username) + ' | ' + message.text)
-    await message.reply("Настройте бота под себя!", reply_markup=GeneralMenu)
+    for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):
+        await message.reply("Настройте бота под себя!\nНастройки на данный момент:\n\
+        Источник: "+item.Source + "\n\
+        Тип артов: "+item.Rating, reply_markup=GeneralMenu)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'Source')
