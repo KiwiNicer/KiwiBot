@@ -25,6 +25,16 @@ async def settings_command(message: types.Message):
         Тип артов: "+item.Rating, reply_markup=GeneralMenu)
 
 
+@dp.message_handler(commands=['send'])
+async def send_command(message):
+    if message.from_user.username=='CakesTwix':
+        for row in engine.connect().execute(db.select([main])):
+            try:
+                await bot.send_message(row.Id, message.text[5:])
+            except:
+                logging.info(str(row.Nickname) + " забанил бота у себя")
+
+
 @dp.callback_query_handler(lambda c: c.data == 'Source')
 async def Source_callback(callback_query: types.CallbackQuery):
     await bot.delete_message(callback_query.from_user.id,callback_query.message.message_id)
