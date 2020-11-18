@@ -22,5 +22,5 @@ async def last_art(message: types.Message):
             logging.info(str(message.from_user.username) + ' | ' + message.text)
             logging.info(json[0]["tags"])
         except Exception:
-            await message.answer(message.chat.id, "Чет тг не понрав")
+            await message.answer("Чет тг не понрав")
             logging.error(str(message.from_user.username) + ' | ' + message.text)

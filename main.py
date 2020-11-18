@@ -8,7 +8,8 @@ from keyboard import GeneralMenu, Source_Keyboard, Sex_Keyboard
 from init import bot, dp, add_new_user, Sources, engine, db, main
 from last_art import last_art
 from random_art import random_art
-
+from find_art import find_art
+from aiogram.types import InlineKeyboardButton
 
 @dp.message_handler(commands=["start"])
 async def start_command(message: types.Message):
@@ -46,7 +47,7 @@ async def SourceContent_callback(callback_query: types.CallbackQuery):
     conn = engine.connect()
     conn.execute(db.update(main).where(main.c.Id == callback_query.from_user.id).values(Source=callback_query.data))
     await bot.delete_message(callback_query.from_user.id,callback_query.message.message_id)
-    await bot.send_message(callback_query.from_user.id, 'Успешно изменено', reply_markup=GeneralMenu)
+    await bot.send_message(callback_query.from_user.id, 'Успешно изменено\nЕще что-то хотите поменять?', reply_markup=GeneralMenu)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'Sex')
@@ -60,7 +61,12 @@ async def SexContent_callback(callback_query: types.CallbackQuery):
     conn = engine.connect()
     conn.execute(db.update(main).where(main.c.Id == callback_query.from_user.id).values(Rating=callback_query.data))
     await bot.delete_message(callback_query.from_user.id,callback_query.message.message_id)
-    await bot.send_message(callback_query.from_user.id, 'Успешно изменено', reply_markup=GeneralMenu)
+    await bot.send_message(callback_query.from_user.id, 'Успешно изменено\nЕще что-то хотите поменять?', reply_markup=GeneralMenu)
+
+
+@dp.callback_query_handler(lambda c: c.data == 'Close')
+async def Close_callback(callback_query: types.CallbackQuery):
+    await bot.delete_message(callback_query.from_user.id,callback_query.message.message_id)
 
 
 if __name__ == "__main__":
