@@ -26,6 +26,7 @@ main = db.Table('main', metadata,
                 db.Column('Nickname', db.String(255), nullable=False),
                 db.Column('Source', db.String(255), nullable=False, default='yande.re'),
                 db.Column('Rating', db.String(255), nullable=False, default='s'),
+                db.Column('Count', db.Integer(), nullable=False, default=1),
                 )
 
 metadata.create_all(engine)

@@ -3,13 +3,13 @@ import logging
 
 import requests
 from aiogram import executor, types
-from keyboard import GeneralMenu, Source_Keyboard, Sex_Keyboard
+from keyboard import GeneralMenu, Source_Keyboard, Sex_Keyboard, Count_ReplyKeyboard
 
 from init import bot, dp, add_new_user, Sources, engine, db, main
 from last_art import last_art
 from random_art import random_art
 from find_art import find_art
-from aiogram.types import InlineKeyboardButton
+from aiogram.types import InlineKeyboardButton, ReplyKeyboardRemove
 
 @dp.message_handler(commands=["start"])
 async def start_command(message: types.Message):
@@ -36,10 +36,22 @@ async def send_command(message):
                 logging.info(str(row.Nickname) + " забанил бота у себя")
 
 
+@dp.message_handler(lambda c: c.text in [str(i) for i in range(1,11)])
+async def Count_Checker(message):
+    conn = engine.connect()
+    conn.execute(db.update(main).where(main.c.Id == message.from_user.id).values(Count=int(message.text)))
+    await bot.send_message(message.from_user.id, "Успешно изменено", reply_markup=ReplyKeyboardRemove())
+
+
 @dp.callback_query_handler(lambda c: c.data == 'Source')
 async def Source_callback(callback_query: types.CallbackQuery):
     await bot.delete_message(callback_query.from_user.id,callback_query.message.message_id)
     await bot.send_message(callback_query.from_user.id, 'Выберите источник: ', reply_markup=Source_Keyboard)
+
+@dp.callback_query_handler(lambda c: c.data == 'Counts')
+async def Counts_callback(callback_query: types.CallbackQuery):
+    await bot.delete_message(callback_query.from_user.id,callback_query.message.message_id)
+    await bot.send_message(callback_query.from_user.id, "Выберите количество артов, которые бот будет отправлять за раз\n", reply_markup=Count_ReplyKeyboard)
 
 
 @dp.callback_query_handler(lambda c: c.data in Sources)

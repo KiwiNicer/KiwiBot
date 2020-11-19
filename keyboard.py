@@ -1,5 +1,6 @@
 from aiogram.types import KeyboardButton, \
-    InlineKeyboardMarkup, InlineKeyboardButton
+    InlineKeyboardMarkup, InlineKeyboardButton, \
+        ReplyKeyboardMarkup
 
 Source_Keyboard=InlineKeyboardMarkup()
 Source_Keyboard.row( 
@@ -11,8 +12,9 @@ Source_Keyboard.row(
 GeneralMenu=InlineKeyboardMarkup()
 GeneralMenu.row(  
     InlineKeyboardButton('Источник', callback_data='Source'),  
-    InlineKeyboardButton('Содержание арта', callback_data='Sex'),   
- ).add(InlineKeyboardButton('Закрыть', callback_data='Close')) 
+    InlineKeyboardButton('Содержание арта', callback_data='Sex'),
+).add(InlineKeyboardButton('Количество артов за раз', callback_data='Counts')    
+).add(InlineKeyboardButton('Закрыть', callback_data='Close')) 
 
 
 Sex_Keyboard=InlineKeyboardMarkup()
@@ -28,3 +30,9 @@ Help_tags.row(
     InlineKeyboardButton('konachan.net', url='https://konachan.net/help/tags'),   
     InlineKeyboardButton('yande.re', url='https://yande.re/help/tags'),  
  ) 
+
+
+Count_ReplyKeyboard = ReplyKeyboardMarkup().row(
+    KeyboardButton('1'), KeyboardButton('2'), KeyboardButton('3')
+).add(KeyboardButton('4'),KeyboardButton('5'),KeyboardButton('6')
+).add(KeyboardButton('7'),KeyboardButton('8'),KeyboardButton('9'), KeyboardButton('10'))
