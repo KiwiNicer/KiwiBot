@@ -56,7 +56,7 @@ async def Sex_callback(callback_query: types.CallbackQuery):
     await bot.send_message(callback_query.from_user.id, 'Выберите то, что хотите посмотреть и не только :)', reply_markup=Sex_Keyboard)
 
 
-@dp.callback_query_handler(lambda c: c.data in ['s','e','q'])
+@dp.callback_query_handler(lambda c: c.data in ['s','e','q', 'n'])
 async def SexContent_callback(callback_query: types.CallbackQuery):
     conn = engine.connect()
     conn.execute(db.update(main).where(main.c.Id == callback_query.from_user.id).values(Rating=callback_query.data))

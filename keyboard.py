@@ -21,7 +21,7 @@ Sex_Keyboard.row(
     InlineKeyboardButton('Хентай', callback_data='e'),
     InlineKeyboardButton('Эччи', callback_data='q')   
  )
-
+Sex_Keyboard.add(InlineKeyboardButton('Без фильтрации', callback_data='n'))
 
 Help_tags=InlineKeyboardMarkup()
 Help_tags.row(  
