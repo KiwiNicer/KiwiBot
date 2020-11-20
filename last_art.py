@@ -26,7 +26,7 @@ async def last_art(message: types.Message):
                 await bot.send_chat_action(message.chat.id, 'upload_photo')
                 for arts_item in json:
                     arts.append(InputMediaPhoto(arts_item["sample_url"]))
-                await bot.send_media_group(message.from_user.id, arts, reply_to_message_id=message.message_id)
+                await bot.send_media_group(message.chat.id, arts, reply_to_message_id=message.message_id)
                 logging.info(str(message.from_user.username) + ' | ' + message.text)
         except Exception as err:
             await message.answer("Чет тг не понрав")
