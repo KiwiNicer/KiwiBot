@@ -5,7 +5,7 @@ import requests
 from aiogram import executor, types
 from keyboard import GeneralMenu, Source_Keyboard, Sex_Keyboard, Count_ReplyKeyboard, Start_ReplyKeyboard
 
-from init import bot, dp, add_new_user, Sources, engine, db, main
+from init import bot, dp, add_new_user, moebooru, booru, engine, db, main
 from last_art import last_art
 from random_art import random_art
 from find_art import find_art
@@ -55,7 +55,8 @@ async def Counts_callback(callback_query: types.CallbackQuery):
     await bot.send_message(callback_query.message.chat.id, "Выберите количество артов, которые бот будет отправлять за раз\n", reply_markup=Count_ReplyKeyboard)
 
 
-@dp.callback_query_handler(lambda c: c.data in Sources)
+@dp.callback_query_handler(lambda c: c.data in moebooru)
+@dp.callback_query_handler(lambda c: c.data in booru)
 async def SourceContent_callback(callback_query: types.CallbackQuery):
     conn = engine.connect()
     conn.execute(db.update(main).where(main.c.Id == callback_query.from_user.id).values(Source=callback_query.data))

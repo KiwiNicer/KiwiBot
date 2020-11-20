@@ -5,7 +5,8 @@ from aiogram.types import KeyboardButton, \
 Source_Keyboard=InlineKeyboardMarkup()
 Source_Keyboard.row( 
     InlineKeyboardButton('yande.re', callback_data='yande.re'),  
-    InlineKeyboardButton('konachan.net', callback_data='konachan.net')  
+    InlineKeyboardButton('konachan.net', callback_data='konachan.net'),  
+    InlineKeyboardButton('safebooru.org', callback_data='safebooru.org') 
 ) 
 
 
