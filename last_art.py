@@ -10,6 +10,7 @@ from init import engine, db, main
 
 
 @dp.message_handler(commands=["last"])
+@dp.message_handler(lambda c: c.text == 'Последний арт')
 async def last_art(message: types.Message):
     for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):
         response = requests.get('https://' + item.Source + '/post.json?limit='+ str(item.Count) +'&tags=rating:'+item.Rating)

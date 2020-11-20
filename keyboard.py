@@ -36,3 +36,8 @@ Count_ReplyKeyboard = ReplyKeyboardMarkup().row(
     KeyboardButton('1'), KeyboardButton('2'), KeyboardButton('3')
 ).add(KeyboardButton('4'),KeyboardButton('5'),KeyboardButton('6')
 ).add(KeyboardButton('7'),KeyboardButton('8'),KeyboardButton('9'), KeyboardButton('10'))
+
+
+Start_ReplyKeyboard = ReplyKeyboardMarkup(resize_keyboard=True).row(
+    KeyboardButton('Последний арт')
+).add(KeyboardButton('Случайный арт'))

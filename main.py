@@ -3,7 +3,7 @@ import logging
 
 import requests
 from aiogram import executor, types
-from keyboard import GeneralMenu, Source_Keyboard, Sex_Keyboard, Count_ReplyKeyboard
+from keyboard import GeneralMenu, Source_Keyboard, Sex_Keyboard, Count_ReplyKeyboard, Start_ReplyKeyboard
 
 from init import bot, dp, add_new_user, Sources, engine, db, main
 from last_art import last_art
@@ -14,7 +14,7 @@ from aiogram.types import InlineKeyboardButton, ReplyKeyboardRemove
 @dp.message_handler(commands=["start"])
 async def start_command(message: types.Message):
     add_new_user(message)
-    await message.answer("Чтобы посмотреть арты, воспользуйся командой /last")
+    await message.answer("Хай, будь нежнее со мной, сэмпай~~", reply_markup=Start_ReplyKeyboard)
 
 
 @dp.message_handler(commands=['settings'])
@@ -40,7 +40,7 @@ async def send_command(message):
 async def Count_Checker(message):
     conn = engine.connect()
     conn.execute(db.update(main).where(main.c.Id == message.from_user.id).values(Count=int(message.text)))
-    await bot.send_message(message.chat.id, "Успешно изменено", reply_markup=ReplyKeyboardRemove())
+    await bot.send_message(message.chat.id, "Успешно изменено", reply_markup=Start_ReplyKeyboard)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'Source')
