@@ -23,7 +23,8 @@ async def settings_command(message: types.Message):
     for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):
         await message.reply("Настройте бота под себя!\nНастройки на данный момент:\n\
         Источник: "+item.Source + "\n\
-        Тип артов: "+item.Rating, reply_markup=GeneralMenu)
+        Тип артов: "+item.Rating + "\n\
+        Количество артов за один запрос: "+str(item.Count), reply_markup=GeneralMenu)
 
 
 @dp.message_handler(commands=['send'])
