@@ -1,20 +1,22 @@
 import asyncio
 import logging
 
-import requests
 from aiogram import executor, types
-from keyboard import GeneralMenu, Source_Keyboard, Sex_Keyboard, Count_ReplyKeyboard, Start_ReplyKeyboard
+from aiogram.types import InlineKeyboardButton, ReplyKeyboardRemove
 
-from init import bot, dp, add_new_user, moebooru, booru, engine, db, main
+from find_art import find_art
+from init import add_new_user, booru, bot, db, dp, engine, main, moebooru
+from keyboard import (Count_ReplyKeyboard, GeneralMenu, Sex_Keyboard,
+                      Source_Keyboard, Start_ReplyKeyboard)
 from last_art import last_art
 from random_art import random_art
-from find_art import find_art
-from aiogram.types import InlineKeyboardButton, ReplyKeyboardRemove
+
 
 @dp.message_handler(commands=["start"])
 async def start_command(message: types.Message):
     add_new_user(message)
     await message.answer("Хай, будь нежнее со мной, сэмпай~~", reply_markup=Start_ReplyKeyboard)
+    logging.info(str(message.from_user.username) + ' | ' + message.text)
 
 
 @dp.message_handler(commands=['settings'])
@@ -84,4 +86,4 @@ async def Close_callback(callback_query: types.CallbackQuery):
 
 
 if __name__ == "__main__":
-	executor.start_polling(dp, skip_updates=True)
+	executor.start_polling(dp, skip_updates=True, fast=False)

@@ -1,6 +1,6 @@
 import logging
 
-import requests
+from pybooru import Moebooru, Danbooru
 from aiogram import executor, types
 from aiogram.types import InputMediaPhoto
 
@@ -15,30 +15,26 @@ from init import moebooru, booru, rating
 async def last_art(message: types.Message):
     for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):
         if item.Source in moebooru:
-            response = requests.get('https://' + item.Source + '/post.json?limit='+ str(item.Count) +'&tags=rating:'+item.Rating)
+            rating_tag = 'rating:' + item.Rating
+            source = Moebooru(item.Source)
         elif item.Source in booru:
-            response = requests.get('https://' + item.Source + '/index.php?page=dapi&s=post&q=index&limit=' + str(item.Count) + '&json=1' + '&tags=' + rating[item.Rating])
-        json = response.json()
+            if item.Rating != 'n':
+                rating_tag = ' rating:' + rating[item.Rating]
+            else:
+                rating_tag = ''
+            source = Danbooru(item.Source)
         try:
-            if len(json) == 1:
-                tag_items = ""
+            for source_item in source.post_list(limit=item.Count, tags=rating_tag):
                 await bot.send_chat_action(message.chat.id, 'upload_photo')
-                for tag_item in json[0]["tags"].split():
-                    tag_items += '#'+tag_item + ' '
+                tag = ''
                 if item.Source in moebooru:
-                    await message.reply_photo(photo= json[0]["sample_url"], caption= tag_items)
+                    for tags in source_item["tags"].split():
+                        tag += '#' + tags + ' '
+                    await message.reply_photo(photo=source_item["sample_url"], caption=tag)
                 elif item.Source in booru:
-                    await message.reply_photo(photo= 'https://' + item.Source + '/images/' + json[0]["directory"] + '/'+json[0]["image"], caption= tag_items)
-            else: 
-                arts = []
-                await bot.send_chat_action(message.chat.id, 'upload_photo')
-                for arts_item in json:
-                    if item.Source in moebooru:
-                        arts.append(InputMediaPhoto(arts_item["sample_url"]))
-                    elif item.Source in booru:
-                        arts.append(InputMediaPhoto('https://' + item.Source + '/images/' + arts_item["directory"] + '/'+arts_item["image"]))
-                await bot.send_media_group(message.chat.id, arts, reply_to_message_id=message.message_id)
-                logging.info(str(message.from_user.username) + ' | ' + message.text)
+                    for tags in source_item["tag_string"].split():
+                        tag += '#' + tags + ' '
+                    await message.reply_photo(photo=source_item["large_file_url"], caption=str(tag))
+            logging.info(str(message.from_user.username) + ' | ' + message.text)
         except Exception as err:
-            await message.answer("Чет тг не понрав")
             logging.error(str(message.from_user.username) + ' | ' + message.text + ' | ' + str(err))

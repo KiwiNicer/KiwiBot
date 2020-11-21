@@ -1,13 +1,12 @@
-from aiogram.types import KeyboardButton, \
-    InlineKeyboardMarkup, InlineKeyboardButton, \
-        ReplyKeyboardMarkup
+from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
+                           KeyboardButton, ReplyKeyboardMarkup)
 
 Source_Keyboard=InlineKeyboardMarkup()
 Source_Keyboard.row( 
-    InlineKeyboardButton('yande.re', callback_data='yande.re'),  
-    InlineKeyboardButton('konachan.net', callback_data='konachan.net'),  
-    InlineKeyboardButton('safebooru.org', callback_data='safebooru.org') 
-) 
+    InlineKeyboardButton('yande.re', callback_data='yandere'),  
+    InlineKeyboardButton('konachan.net', callback_data='konachan'), 
+    InlineKeyboardButton('danbooru.donmai.us', callback_data='danbooru') 
+).add(InlineKeyboardButton('lolibooru.moe', callback_data='lolibooru')) 
 
 
 GeneralMenu=InlineKeyboardMarkup()
@@ -29,7 +28,7 @@ Sex_Keyboard.add(InlineKeyboardButton('Без фильтрации', callback_da
 Help_tags=InlineKeyboardMarkup()
 Help_tags.row(  
     InlineKeyboardButton('konachan.net', url='https://konachan.net/help/tags'),   
-    InlineKeyboardButton('yande.re', url='https://yande.re/help/tags'),  
+    InlineKeyboardButton('yande.re', url='https://yande.re/help/tags'), 
  ) 
 
 

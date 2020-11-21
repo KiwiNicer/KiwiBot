@@ -7,10 +7,10 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 import Token as token
 
-moebooru = ['yande.re', 'konachan.net']
-booru = ['safebooru.org']
-dont_have_random = ['safebooru.org']
-rating = {"s":"rating:safe","q":"rating:questionable","e":"rating:explicit","n":""}
+moebooru = ['yandere', 'konachan', 'lolibooru']
+booru = ['danbooru']
+
+rating = {"s":"safe","q":"questionable","e":"explicit","n":""}
 
 bot = Bot(token.token)
 storage = MemoryStorage()
