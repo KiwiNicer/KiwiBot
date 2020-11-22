@@ -3,6 +3,7 @@ import logging
 
 from aiogram import executor, types
 from aiogram.types import InlineKeyboardButton, ReplyKeyboardRemove
+from pybooru import Danbooru, Moebooru
 
 from find_art import find_art
 from init import add_new_user, booru, bot, db, dp, engine, main, moebooru
@@ -50,6 +51,20 @@ async def Count_Checker(message):
 async def Source_callback(callback_query: types.CallbackQuery):
     await bot.delete_message(callback_query.message.chat.id,callback_query.message.message_id)
     await bot.send_message(callback_query.message.chat.id, 'Выберите источник: ', reply_markup=Source_Keyboard)
+
+
+@dp.callback_query_handler(lambda c: len(c.data.split()) == 2 )
+async def Download_callback(callback_query: types.CallbackQuery):
+    if callback_query.data.split()[0] in booru:
+        source = Danbooru(callback_query.data.split()[0])
+        post = source.post_show(callback_query.data.split()[1])["file_url"]
+    elif callback_query.data.split()[0] in moebooru:
+        source = Moebooru(callback_query.data.split()[0])
+        post = source.post_list(tags="id:"+callback_query.data.split()[1])[0]["file_url"]
+    await bot.send_chat_action(callback_query.message.chat.id, 'upload_document')
+    await bot.send_document(callback_query.message.chat.id, post)
+    logging.info(str(callback_query.from_user.username) + ' | Отправление арта без сжатия')
+
 
 @dp.callback_query_handler(lambda c: c.data == 'Counts')
 async def Counts_callback(callback_query: types.CallbackQuery):

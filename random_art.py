@@ -2,7 +2,7 @@ import logging
 from pybooru import Moebooru, Danbooru
 import requests
 from aiogram import executor, types
-from aiogram.types import InputMediaPhoto
+from aiogram.types import InputMediaPhoto, InlineKeyboardMarkup, InlineKeyboardButton
 
 import Token as Tg
 from init import bot, dp
@@ -31,11 +31,17 @@ async def random_art(message: types.Message):
                 if item.Source in moebooru:
                     for tags in source_item["tags"].split():
                         tag += '#' + tags + ' '
-                    await message.reply_photo(photo=source_item["sample_url"], caption=tag)
+                    Download_Keyboard=InlineKeyboardMarkup()
+                    Download_Keyboard.row( 
+                        InlineKeyboardButton('Без сжатия', callback_data=item.Source + ' ' + str(source_item["id"])))
+                    await message.reply_photo(photo=source_item["sample_url"], caption=tag, reply_markup=Download_Keyboard)
                 elif item.Source in booru:
                     for tags in source_item["tag_string"].split():
                         tag += '#' + tags + ' '
-                    await message.reply_photo(photo=source_item["large_file_url"], caption=str(tag))
+                    Download_Keyboard=InlineKeyboardMarkup()
+                    Download_Keyboard.row( 
+                        InlineKeyboardButton('Без сжатия', callback_data=item.Source + ' ' + str(source_item["id"])))
+                    await message.reply_photo(photo=source_item["large_file_url"], caption=str(tag), reply_markup=Download_Keyboard)
             logging.info(str(message.from_user.username) + ' | ' + message.text)
         except Exception as err:
             logging.error(str(message.from_user.username) + ' | ' + message.text + ' | ' + str(err))
