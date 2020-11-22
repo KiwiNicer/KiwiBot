@@ -13,6 +13,7 @@ from init import moebooru, booru, rating
 @dp.message_handler(commands=["random"])
 @dp.message_handler(lambda c: c.text == 'Случайный арт')
 async def random_art(message: types.Message):
+    global source
     for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):
         if item.Source in moebooru:
             rating_tag = 'order:random rating:'+item.Rating
