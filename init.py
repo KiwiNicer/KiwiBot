@@ -25,7 +25,7 @@ metadata = db.MetaData()
 main = db.Table('main', metadata,
                 db.Column('Id', db.Integer(), primary_key=True),
                 db.Column('Nickname', db.String(255), nullable=False),
-                db.Column('Source', db.String(255), nullable=False, default='yande.re'),
+                db.Column('Source', db.String(255), nullable=False, default='yandere'),
                 db.Column('Rating', db.String(255), nullable=False, default='s'),
                 db.Column('Count', db.Integer(), nullable=False, default=1),
                 )
