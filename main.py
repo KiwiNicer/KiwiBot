@@ -61,6 +61,7 @@ async def Download_callback(callback_query: types.CallbackQuery):
     elif callback_query.data.split()[0] in moebooru:
         source = Moebooru(callback_query.data.split()[0])
         post = source.post_list(tags="id:"+callback_query.data.split()[1])[0]["file_url"]
+    await bot.answer_callback_query(callback_query.id)
     await bot.send_chat_action(callback_query.message.chat.id, 'upload_document')
     await bot.send_document(callback_query.message.chat.id, post)
     logging.info(str(callback_query.from_user.username) + ' | Отправление арта без сжатия')
