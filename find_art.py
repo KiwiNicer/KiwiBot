@@ -10,6 +10,7 @@ from keyboard import Help_tags
 
 
 @dp.message_handler(commands=["find"])
+@dp.throttled(rate=1)
 async def find_art(message: types.Message):
     global source
     for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):

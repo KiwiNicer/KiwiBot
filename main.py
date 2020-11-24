@@ -17,6 +17,7 @@ from random_art import random_art
 
 
 @dp.message_handler(commands=["start"])
+@dp.throttled(rate=1)
 async def start_command(message: types.Message):
     add_new_user(message)
     await message.answer("Хай, будь нежнее со мной, сэмпай~~", reply_markup=Start_ReplyKeyboard)
@@ -24,6 +25,7 @@ async def start_command(message: types.Message):
 
 
 @dp.message_handler(commands=['settings'])
+@dp.throttled(rate=1)
 async def settings_command(message: types.Message):
     logging.info(str(message.from_user.username) + ' | ' + message.text)
     for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):
