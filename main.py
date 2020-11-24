@@ -9,7 +9,7 @@ from aiogram.types import (InlineKeyboardButton, InlineQuery,
 from pybooru import Danbooru, Moebooru
 
 from find_art import find_art
-from init import add_new_user, booru, bot, db, dp, engine, main, moebooru
+from init import add_new_user, booru, bot, db, dp, engine, main, moebooru, rating
 from keyboard import (Count_ReplyKeyboard, GeneralMenu, Sex_Keyboard,
                       Source_Keyboard, Start_ReplyKeyboard)
 from last_art import last_art
@@ -102,5 +102,23 @@ async def Close_callback(callback_query: types.CallbackQuery):
     await bot.delete_message(callback_query.message.chat.id,callback_query.message.message_id)
 
 
+@dp.inline_handler(lambda query: len(query.query.split()) == 1)
+async def in_last(query):
+    if query.query.split()[0] == '.last':
+        PhotoTemp = []
+        for item in engine.connect().execute(main.select().where(main.c.Id==query.from_user.id)):
+            if item.Source in moebooru:
+                rating_tag = 'rating:' + item.Rating
+                source = Moebooru(item.Source)
+            elif item.Source in booru:
+                break
+            for source_item in source.post_list(limit=item.Count, tags=rating_tag): 
+                PhotoTemp.append(InlineQueryResultPhoto(
+                    id=source_item["id"],
+                    thumb_url=source_item["sample_url"],
+                    photo_url=source_item["sample_url"]))
+        await bot.answer_inline_query(query.id, results=PhotoTemp, cache_time=10)
+
+
 if __name__ == "__main__":
-	executor.start_polling(dp, skip_updates=True, fast=False)
+	executor.start_polling(dp, skip_updates=True)
