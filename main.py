@@ -1,8 +1,11 @@
 import asyncio
+import hashlib
 import logging
 
-from aiogram import executor, types
-from aiogram.types import InlineKeyboardButton, ReplyKeyboardRemove
+from aiogram import Bot, Dispatcher, executor, types
+from aiogram.types import (InlineKeyboardButton, InlineQuery,
+                           InlineQueryResultPhoto, InputTextMessageContent,
+                           ReplyKeyboardRemove)
 from pybooru import Danbooru, Moebooru
 
 from find_art import find_art
@@ -49,8 +52,7 @@ async def Count_Checker(message):
 
 @dp.callback_query_handler(lambda c: c.data == 'Source')
 async def Source_callback(callback_query: types.CallbackQuery):
-    await bot.delete_message(callback_query.message.chat.id,callback_query.message.message_id)
-    await bot.send_message(callback_query.message.chat.id, 'Выберите источник: ', reply_markup=Source_Keyboard)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=Source_Keyboard)
 
 
 @dp.callback_query_handler(lambda c: len(c.data.split()) == 2 )
@@ -61,7 +63,7 @@ async def Download_callback(callback_query: types.CallbackQuery):
     elif callback_query.data.split()[0] in moebooru:
         source = Moebooru(callback_query.data.split()[0])
         post = source.post_list(tags="id:"+callback_query.data.split()[1])[0]["file_url"]
-    await bot.answer_callback_query(callback_query.id)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id)
     await bot.send_chat_action(callback_query.message.chat.id, 'upload_document')
     await bot.send_document(callback_query.message.chat.id, post)
     logging.info(str(callback_query.from_user.username) + ' | Отправление арта без сжатия')
@@ -78,22 +80,19 @@ async def Counts_callback(callback_query: types.CallbackQuery):
 async def SourceContent_callback(callback_query: types.CallbackQuery):
     conn = engine.connect()
     conn.execute(db.update(main).where(main.c.Id == callback_query.from_user.id).values(Source=callback_query.data))
-    await bot.delete_message(callback_query.message.chat.id,callback_query.message.message_id)
-    await bot.send_message(callback_query.message.chat.id, 'Успешно изменено\nЕще что-то хотите поменять?', reply_markup=GeneralMenu)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=GeneralMenu)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'Sex')
 async def Sex_callback(callback_query: types.CallbackQuery):
-    await bot.delete_message(callback_query.message.chat.id,callback_query.message.message_id)
-    await bot.send_message(callback_query.message.chat.id, 'Выберите то, что хотите посмотреть и не только :)', reply_markup=Sex_Keyboard)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=Sex_Keyboard)
 
 
 @dp.callback_query_handler(lambda c: c.data in ['s','e','q', 'n'])
 async def SexContent_callback(callback_query: types.CallbackQuery):
     conn = engine.connect()
     conn.execute(db.update(main).where(main.c.Id == callback_query.from_user.id).values(Rating=callback_query.data))
-    await bot.delete_message(callback_query.message.chat.id,callback_query.message.message_id)
-    await bot.send_message(callback_query.message.chat.id, 'Успешно изменено\nЕще что-то хотите поменять?', reply_markup=GeneralMenu)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=GeneralMenu)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'Close')
