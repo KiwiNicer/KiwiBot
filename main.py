@@ -1,6 +1,6 @@
 import asyncio
 import hashlib
-import logging
+import logging, requests, Token
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import (InlineKeyboardButton, InlineQuery,
@@ -21,6 +21,7 @@ from random_art import random_art
 @dp.throttled(rate=1)
 async def start_command(message: types.Message):
     add_new_user(message)
+    print(message.chat.id)
     await message.answer("Хай, будь нежнее со мной, сэмпай~~", reply_markup=Start_ReplyKeyboard)
     logging.info(str(message.from_user.username) + ' | ' + message.text)
 
@@ -114,5 +115,10 @@ async def in_last(query):
         await bot.answer_inline_query(query.id, results=PhotoTemp, cache_time=10)
 
 
+async def shutdown(dispatcher: Dispatcher):  
+    #Если вы не я - замените chat_id на свое. Я предупредил :)
+    return requests.get('https://api.telegram.org/bot' + Token.token + '/sendMessage?chat_id=360862309&text=Я упаль')
+
+
 if __name__ == "__main__":
-	executor.start_polling(dp, skip_updates=True)
+	executor.start_polling(dp, skip_updates=True, on_shutdown=shutdown)
