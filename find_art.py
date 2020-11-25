@@ -1,11 +1,12 @@
 import logging
 
 from aiogram import executor, types
-from aiogram.types import InputMediaPhoto, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
+                           InputMediaPhoto)
 from pybooru import Danbooru, Moebooru
 
 import Token as Tg
-from init import booru, bot, db, dp, engine, main, moebooru, rating
+from init import booru, bot, db, dp, engine, main, moebooru
 from keyboard import Help_tags
 
 
@@ -15,22 +16,17 @@ async def find_art(message: types.Message):
     global source
     for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):
         if item.Source in moebooru:
-            rating_tag = ' order:random rating:' + item.Rating
             source = Moebooru(item.Source)
         elif item.Source in booru:
-            if item.Rating != 'n':
-                rating_tag = ' order:random rating:' + rating[item.Rating]
-            else:
-                rating_tag = ' order:random'
             source = Danbooru(item.Source)
         try:
             if message.get_args() == '':
                 await message.answer("Поиск по тегам, гайд", reply_markup=Help_tags)
                 break
-            if source.post_list(limit=item.Count, tags=message.get_args() + rating_tag, random=True) == []:
+            if source.post_list(limit=item.Count, tags=message.get_args() + ' order:random rating:s', random=True) == []:
                 await message.answer("Ничего не найдено")
                 break
-            for source_item in source.post_list(limit=item.Count, tags=message.get_args() + rating_tag, random=True):
+            for source_item in source.post_list(limit=item.Count, tags=message.get_args() + ' order:random rating:s', random=True):
                 await bot.send_chat_action(message.chat.id, 'upload_photo')
                 tag = ''
                 if item.Source in moebooru:

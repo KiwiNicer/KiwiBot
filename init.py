@@ -1,6 +1,6 @@
 import logging
-import sqlalchemy as db
 
+import sqlalchemy as db
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
@@ -10,7 +10,6 @@ import Token as token
 moebooru = ['yandere', 'konachan', 'lolibooru']
 booru = ['danbooru']
 
-rating = {"s":"safe","q":"questionable","e":"explicit","n":""}
 
 bot = Bot(token.token)
 storage = MemoryStorage()
@@ -26,7 +25,6 @@ main = db.Table('main', metadata,
                 db.Column('Id', db.Integer(), primary_key=True),
                 db.Column('Nickname', db.String(255), nullable=False),
                 db.Column('Source', db.String(255), nullable=False, default='yandere'),
-                db.Column('Rating', db.String(255), nullable=False, default='s'),
                 db.Column('Count', db.Integer(), nullable=False, default=1),
                 )
 
@@ -39,7 +37,7 @@ def add_new_user(message):
         query = db.insert(main).values(Id=message.from_user.id, Nickname=str(message.from_user.username))
         connection.execute(query)
     except:
-        logging.warning('Юзер есть в БД | ' + message.text)
+        pass
 
 
 def check_db():

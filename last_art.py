@@ -1,13 +1,12 @@
 import logging
 
-from pybooru import Moebooru, Danbooru
 from aiogram import executor, types
-from aiogram.types import InputMediaPhoto, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
+                           InputMediaPhoto)
+from pybooru import Danbooru, Moebooru
 
 import Token as Tg
-from init import bot, dp
-from init import engine, db, main
-from init import moebooru, booru, rating
+from init import booru, bot, db, dp, engine, main, moebooru
 
 
 @dp.message_handler(commands=["last"])
@@ -17,16 +16,11 @@ async def last_art(message: types.Message):
     global source
     for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):
         if item.Source in moebooru:
-            rating_tag = 'rating:' + item.Rating
             source = Moebooru(item.Source)
         elif item.Source in booru:
-            if item.Rating != 'n':
-                rating_tag = ' rating:' + rating[item.Rating]
-            else:
-                rating_tag = ''
             source = Danbooru(item.Source)
         try:
-            for source_item in source.post_list(limit=item.Count, tags=rating_tag):
+            for source_item in source.post_list(limit=item.Count, tags='rating:s'):
                 await bot.send_chat_action(message.chat.id, 'upload_photo')
                 tag = ''
                 if item.Source in moebooru:

@@ -12,18 +12,9 @@ Source_Keyboard.row(
 GeneralMenu=InlineKeyboardMarkup()
 GeneralMenu.row(  
     InlineKeyboardButton('Источник', callback_data='Source'),  
-    InlineKeyboardButton('Содержание арта', callback_data='Sex'),
 ).add(InlineKeyboardButton('Количество артов за раз', callback_data='Counts')    
 ).add(InlineKeyboardButton('Закрыть', callback_data='Close')) 
 
-
-Sex_Keyboard=InlineKeyboardMarkup()
-Sex_Keyboard.row(  
-    InlineKeyboardButton('Без хентая', callback_data='s'),  
-    InlineKeyboardButton('Хентай', callback_data='e'),
-    InlineKeyboardButton('Эччи', callback_data='q')   
- )
-Sex_Keyboard.add(InlineKeyboardButton('Без фильтрации', callback_data='n'))
 
 Help_tags=InlineKeyboardMarkup()
 Help_tags.row(  
@@ -40,4 +31,5 @@ Count_ReplyKeyboard = ReplyKeyboardMarkup().row(
 
 Start_ReplyKeyboard = ReplyKeyboardMarkup(resize_keyboard=True).row(
     KeyboardButton('Последний арт')
-).add(KeyboardButton('Случайный арт'))
+).add(KeyboardButton('Случайный арт')
+).add(KeyboardButton('Закрыть'))
