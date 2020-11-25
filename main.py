@@ -9,14 +9,15 @@ from aiogram.types import (InlineKeyboardButton, InlineQuery,
 from pybooru import Danbooru, Moebooru
 
 from find_art import find_art
-from init import add_new_user, booru, bot, db, dp, engine, main, moebooru, rating
-from keyboard import (Count_ReplyKeyboard, GeneralMenu, Sex_Keyboard,
-                      Source_Keyboard, Start_ReplyKeyboard)
+from init import add_new_user, booru, bot, db, dp, engine, main, moebooru
+from keyboard import (Count_ReplyKeyboard, GeneralMenu, Source_Keyboard,
+                      Start_ReplyKeyboard)
 from last_art import last_art
 from random_art import random_art
 
 
 @dp.message_handler(commands=["start"])
+@dp.message_handler(lambda c: c.text == 'Показать клавиатуру')
 @dp.throttled(rate=1)
 async def start_command(message: types.Message):
     add_new_user(message)
@@ -31,7 +32,6 @@ async def settings_command(message: types.Message):
     for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):
         await message.reply("Настройте бота под себя!\nНастройки на данный момент:\n\
         Источник: "+item.Source + "\n\
-        Тип артов: "+item.Rating + "\n\
         Количество артов за один запрос: "+str(item.Count), reply_markup=GeneralMenu)
 
 
@@ -85,21 +85,15 @@ async def SourceContent_callback(callback_query: types.CallbackQuery):
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=GeneralMenu)
 
 
-@dp.callback_query_handler(lambda c: c.data == 'Sex')
-async def Sex_callback(callback_query: types.CallbackQuery):
-    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=Sex_Keyboard)
-
-
-@dp.callback_query_handler(lambda c: c.data in ['s','e','q', 'n'])
-async def SexContent_callback(callback_query: types.CallbackQuery):
-    conn = engine.connect()
-    conn.execute(db.update(main).where(main.c.Id == callback_query.from_user.id).values(Rating=callback_query.data))
-    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=GeneralMenu)
-
-
 @dp.callback_query_handler(lambda c: c.data == 'Close')
 async def Close_callback(callback_query: types.CallbackQuery):
     await bot.delete_message(callback_query.message.chat.id,callback_query.message.message_id)
+
+
+@dp.message_handler(lambda c: c.text == 'Закрыть')
+async def Close_message(message):
+    await message.answer('Удаляю~~', reply_markup=ReplyKeyboardRemove())
+    await bot.delete_message(message.chat.id, message.message_id+1)
 
 
 @dp.inline_handler(lambda query: len(query.query.split()) == 1)
@@ -108,7 +102,7 @@ async def in_last(query):
         PhotoTemp = []
         for item in engine.connect().execute(main.select().where(main.c.Id==query.from_user.id)):
             if item.Source in moebooru:
-                rating_tag = 'rating:' + item.Rating
+                rating_tag = 'rating:s'
                 source = Moebooru(item.Source)
             elif item.Source in booru:
                 break
