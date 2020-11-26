@@ -97,22 +97,36 @@ async def Close_message(message):
     await bot.delete_message(message.chat.id, message.message_id+1)
 
 
-@dp.inline_handler(lambda query: len(query.query.split()) == 1)
+@dp.inline_handler()
 async def in_last(query):
-    if query.query.split()[0] == '.last':
+    if query.query == '': 
         PhotoTemp = []
         for item in engine.connect().execute(main.select().where(main.c.Id==query.from_user.id)):
             if item.Source in moebooru:
-                rating_tag = 'rating:s'
                 source = Moebooru(item.Source)
             elif item.Source in booru:
                 break
-            for source_item in source.post_list(limit=item.Count, tags=rating_tag): 
+            for source_item in source.post_list(limit=20, tags='order:random rating:s', random=True): 
                 PhotoTemp.append(InlineQueryResultPhoto(
                     id=source_item["id"],
                     thumb_url=source_item["sample_url"],
                     photo_url=source_item["sample_url"]))
         await bot.answer_inline_query(query.id, results=PhotoTemp, cache_time=10)
+    elif len(query.query.split()) > 1:
+        if query.query.split()[0] == '.last':
+            PhotoTemp = []
+            for item in engine.connect().execute(main.select().where(main.c.Id==query.from_user.id)):
+                if item.Source in moebooru:
+                    rating_tag = 'rating:s'
+                    source = Moebooru(item.Source)
+                elif item.Source in booru:
+                    break
+                for source_item in source.post_list(limit=20, tags=rating_tag): 
+                    PhotoTemp.append(InlineQueryResultPhoto(
+                        id=source_item["id"],
+                        thumb_url=source_item["sample_url"],
+                        photo_url=source_item["sample_url"]))
+            await bot.answer_inline_query(query.id, results=PhotoTemp, cache_time=10)
 
 
 async def shutdown(dispatcher: Dispatcher):  
