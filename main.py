@@ -1,19 +1,21 @@
 import asyncio
 import hashlib
-import logging, requests, Token
+import logging
 
+import requests
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import (InlineKeyboardButton, InlineQuery,
                            InlineQueryResultPhoto, InputTextMessageContent,
                            ReplyKeyboardRemove)
 from pybooru import Danbooru, Moebooru
 
-from find_art import find_art
+import Token
+from handlers.find_art import find_art
+from handlers.last_art import last_art
+from handlers.random_art import random_art
 from init import add_new_user, booru, bot, db, dp, engine, main, moebooru
 from keyboard import (Count_ReplyKeyboard, GeneralMenu, Source_Keyboard,
                       Start_ReplyKeyboard)
-from last_art import last_art
-from random_art import random_art
 
 
 @dp.message_handler(commands=["start"])
