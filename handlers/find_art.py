@@ -10,7 +10,7 @@ from init import booru, bot, db, dp, engine, main, moebooru
 from keyboards.keyboard import Help_tags
 
 
-@dp.message_handler(commands=["find"])
+@dp.message_handler()
 @dp.throttled(rate=1)
 async def find_art(message: types.Message):
     global source
@@ -20,13 +20,10 @@ async def find_art(message: types.Message):
         elif item.Source in booru:
             source = Danbooru(item.Source)
         try:
-            if message.get_args() == '':
-                await message.answer("Поиск по тегам, гайд", reply_markup=Help_tags)
-                break
-            if source.post_list(limit=item.Count, tags=message.get_args() + ' order:random rating:s', random=True) == []:
+            if source.post_list(limit=item.Count, tags=message.text + ' order:random rating:s', random=True) == []:
                 await message.answer("Ничего не найдено")
                 break
-            for source_item in source.post_list(limit=item.Count, tags=message.get_args() + ' order:random rating:s', random=True):
+            for source_item in source.post_list(limit=item.Count, tags=message.text + ' order:random rating:s', random=True):
                 await bot.send_chat_action(message.chat.id, 'upload_photo')
                 tag = ''
                 if item.Source in moebooru:
