@@ -14,7 +14,7 @@ from handlers.find_art import find_art
 from handlers.last_art import last_art
 from handlers.random_art import random_art
 from init import add_new_user, booru, bot, db, dp, engine, main, moebooru
-from keyboard import (Count_ReplyKeyboard, GeneralMenu, Source_Keyboard,
+from keyboards.keyboard import (Count_ReplyKeyboard, GeneralMenu, Source_Keyboard,
                       Start_ReplyKeyboard)
 
 

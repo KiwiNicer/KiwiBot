@@ -7,7 +7,7 @@ from pybooru import Danbooru, Moebooru
 
 import Token as Tg
 from init import booru, bot, db, dp, engine, main, moebooru
-from keyboard import Help_tags
+from keyboards.keyboard import Help_tags
 
 
 @dp.message_handler(commands=["find"])
