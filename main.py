@@ -14,30 +14,12 @@ from handlers.last_art import last_art
 from handlers.random_art import random_art
 from handlers.settings import (Close_callback, Close_message, Count_Checker,
                                Source_callback, SourceContent_callback,
-                               settings_command)
+                               settings_command, send_command)
 from init import add_new_user, booru, bot, db, dp, engine, main, moebooru
 from keyboards.keyboard import (Count_ReplyKeyboard, GeneralMenu,
                                 Source_Keyboard, Start_ReplyKeyboard)
+from handlers.start import start_command
 from handlers.find_art import find_art
-
-@dp.message_handler(commands=["start"])
-@dp.message_handler(lambda c: c.text == 'Показать клавиатуру')
-@dp.throttled(rate=1)
-async def start_command(message: types.Message):
-    add_new_user(message)
-    print(message.chat.id)
-    await message.answer("Хай, будь нежнее со мной, сэмпай~~", reply_markup=Start_ReplyKeyboard)
-    logging.info(str(message.from_user.username) + ' | ' + message.text)
-
-
-@dp.message_handler(commands=['send'])
-async def send_command(message):
-    if message.from_user.username=='CakesTwix':
-        for row in engine.connect().execute(db.select([main])):
-            try:
-                await bot.send_message(row.Id, message.text[5:])
-            except:
-                logging.info(str(row.Nickname) + " забанил бота у себя")
 
 
 @dp.callback_query_handler(lambda c: len(c.data.split()) == 2 )

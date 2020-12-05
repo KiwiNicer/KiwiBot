@@ -52,3 +52,13 @@ async def Close_callback(callback_query: types.CallbackQuery):
 async def Close_message(message):
     await message.answer('Удаляю~~', reply_markup=ReplyKeyboardRemove())
     await bot.delete_message(message.chat.id, message.message_id+1)
+
+
+@dp.message_handler(commands=['send'])
+async def send_command(message):
+    if message.from_user.username=='CakesTwix':
+        for row in engine.connect().execute(db.select([main])):
+            try:
+                await bot.send_message(row.Id, message.text[5:])
+            except:
+                logging.info(str(row.Nickname) + " забанил бота у себя")
