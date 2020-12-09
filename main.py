@@ -41,9 +41,9 @@ async def in_last(query):
             if item.Source in moebooru:
                 source = Moebooru(item.Source)
             elif item.Source == 'danbooru':
-                rating_tag = 'rating:safe ' + query.query
+                rating_tag = 'rating:safe order:random ' + query.query
                 source = Danbooru(item.Source)
-            for source_item in source.post_list(limit=20, tags='order:random rating:s', random=True):
+            for source_item in source.post_list(limit=20, tags=rating_tag, random=True):
                 if 'large_file_url' in source_item:
                     PhotoTemp.append(InlineQueryResultPhoto(
                         id=source_item["id"],
