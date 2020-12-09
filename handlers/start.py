@@ -1,7 +1,6 @@
 import logging
 
 from aiogram import types
-from aiogram.types import ReplyKeyboardRemove
 from init import add_new_user, dp
 from keyboards.keyboard import Start_ReplyKeyboard
 

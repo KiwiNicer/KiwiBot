@@ -1,21 +1,18 @@
 import logging
 
-import requests
-from aiogram import executor, types
+from aiogram import types
 from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
                            InputMediaPhoto)
 from pybooru import Danbooru, Moebooru
 
-import Token as Tg
-from init import booru, bot, db, dp, engine, main, moebooru
+from init import booru, bot, dp, engine, main, moebooru
 
 
 @dp.message_handler(commands=["random"])
 @dp.message_handler(lambda c: c.text == 'Случайный арт')
 @dp.throttled(rate=1)
 async def random_art(message: types.Message):
-    global source
-    for item in engine.connect().execute(main.select().where(main.c.Id==message.from_user.id)):
+    for item in engine.connect().execute(main.select().where(main.c.Id == message.from_user.id)):
         if item.Source in moebooru:
             source = Moebooru(item.Source)
         elif item.Source in booru:
@@ -27,18 +24,19 @@ async def random_art(message: types.Message):
                 if item.Source in moebooru:
                     for tags in source_item["tags"].split():
                         tag += '#' + tags + ' '
-                    Download_Keyboard=InlineKeyboardMarkup()
-                    Download_Keyboard.row( 
+                    Download_Keyboard = InlineKeyboardMarkup()
+                    Download_Keyboard.row(
                         InlineKeyboardButton('Без сжатия', callback_data=item.Source + ' ' + str(source_item["id"])))
-                    await message.reply_photo(photo=source_item["sample_url"], caption=tag, reply_markup=Download_Keyboard)
+                    await message.reply_photo(photo=source_item["sample_url"], caption=tag,
+                                              reply_markup=Download_Keyboard)
                 elif item.Source in booru:
                     for tags in source_item["tag_string"].split():
                         tag += '#' + tags + ' '
-                    Download_Keyboard=InlineKeyboardMarkup()
-                    Download_Keyboard.row( 
+                    Download_Keyboard = InlineKeyboardMarkup()
+                    Download_Keyboard.row(
                         InlineKeyboardButton('Без сжатия', callback_data=item.Source + ' ' + str(source_item["id"])))
-                    await message.reply_photo(photo=source_item["large_file_url"], caption=str(tag), reply_markup=Download_Keyboard)
+                    await message.reply_photo(photo=source_item["large_file_url"], caption=str(tag),
+                                              reply_markup=Download_Keyboard)
             logging.info(str(message.from_user.username) + ' | ' + message.text)
         except Exception as err:
             logging.error(str(message.from_user.username) + ' | ' + message.text + ' | ' + str(err))
-
