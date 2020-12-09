@@ -40,13 +40,20 @@ async def in_last(query):
         for item in engine.connect().execute(main.select().where(main.c.Id == query.from_user.id)):
             if item.Source in moebooru:
                 source = Moebooru(item.Source)
-            elif item.Source in booru:
-                break
+            elif item.Source == 'danbooru':
+                rating_tag = 'rating:safe ' + query.query
+                source = Danbooru(item.Source)
             for source_item in source.post_list(limit=20, tags='order:random rating:s', random=True):
-                PhotoTemp.append(InlineQueryResultPhoto(
-                    id=source_item["id"],
-                    thumb_url=source_item["sample_url"],
-                    photo_url=source_item["sample_url"]))
+                if 'large_file_url' in source_item:
+                    PhotoTemp.append(InlineQueryResultPhoto(
+                        id=source_item["id"],
+                        thumb_url=source_item["large_file_url"],
+                        photo_url=source_item["large_file_url"]))
+                else:
+                    PhotoTemp.append(InlineQueryResultPhoto(
+                        id=source_item["id"],
+                        thumb_url=source_item["sample_url"],
+                        photo_url=source_item["sample_url"]))
         logging.info(str(query.from_user.username) + ' | Инлайн режим | Рандом')
         await bot.answer_inline_query(query.id, results=PhotoTemp, cache_time=10)
     else:
@@ -55,13 +62,20 @@ async def in_last(query):
             if item.Source in moebooru:
                 rating_tag = 'rating:s ' + query.query
                 source = Moebooru(item.Source)
-            elif item.Source in booru:
-                break
+            elif item.Source == 'danbooru':
+                rating_tag = 'rating:safe ' + query.query
+                source = Danbooru(item.Source)
             for source_item in source.post_list(limit=20, tags=rating_tag):
-                PhotoTemp.append(InlineQueryResultPhoto(
-                    id=source_item["id"],
-                    thumb_url=source_item["sample_url"],
-                    photo_url=source_item["sample_url"]))
+                if 'large_file_url' in source_item:
+                    PhotoTemp.append(InlineQueryResultPhoto(
+                        id=source_item["id"],
+                        thumb_url=source_item["large_file_url"],
+                        photo_url=source_item["large_file_url"]))
+                else:
+                    PhotoTemp.append(InlineQueryResultPhoto(
+                        id=source_item["id"],
+                        thumb_url=source_item["sample_url"],
+                        photo_url=source_item["sample_url"]))
         logging.info(str(query.from_user.username) + ' | Инлайн режим | Поиск по тегу ' + query.query)
         await bot.answer_inline_query(query.id, results=PhotoTemp, cache_time=10)
 
