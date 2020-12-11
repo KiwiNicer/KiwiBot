@@ -2,7 +2,7 @@ import logging
 
 from aiogram import types
 from aiogram.types import ReplyKeyboardRemove
-from init import booru, bot, db, dp, engine, main, moebooru
+from init import bot, db, dp, engine, main, api
 from keyboards.keyboard import (Count_ReplyKeyboard, GeneralMenu,
                                 Source_Keyboard)
 
@@ -10,11 +10,11 @@ from keyboards.keyboard import (Count_ReplyKeyboard, GeneralMenu,
 @dp.message_handler(commands=['settings'])
 @dp.throttled(rate=1)
 async def settings_command(message: types.Message):
-    logging.info(str(message.from_user.username) + ' | ' + message.text)
     for item in engine.connect().execute(main.select().where(main.c.Id == message.from_user.id)):
         await message.reply("Настройте бота под себя!\nНастройки на данный момент:\n\
         Источник: " + item.Source + "\n\
-        Количество артов за один запрос: " + str(item.Count), reply_markup=GeneralMenu)
+        Количество артов за один запрос: " + str(item.Count), reply_markup=GeneralMenu, disable_web_page_preview=True)
+    logging.info(str(message.from_user.username) + ' | ' + message.text)
 
 
 @dp.message_handler(lambda c: c.text in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"])
@@ -37,8 +37,7 @@ async def Counts_callback(callback_query: types.CallbackQuery):
                            reply_markup=Count_ReplyKeyboard)
 
 
-@dp.callback_query_handler(lambda c: c.data in moebooru)
-@dp.callback_query_handler(lambda c: c.data in booru)
+@dp.callback_query_handler(lambda c: c.data in api)
 async def SourceContent_callback(callback_query: types.CallbackQuery):
     conn = engine.connect()
     conn.execute(db.update(main).where(main.c.Id == callback_query.from_user.id).values(Source=callback_query.data))

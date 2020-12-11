@@ -1,12 +1,10 @@
 from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
                            KeyboardButton, ReplyKeyboardMarkup)
-
+from init import api
 Source_Keyboard = InlineKeyboardMarkup()
-Source_Keyboard.row(
-    InlineKeyboardButton('yande.re', callback_data='yandere'),
-    InlineKeyboardButton('konachan.net', callback_data='konachan'),
-    InlineKeyboardButton('danbooru.donmai.us', callback_data='danbooru')
-).add(InlineKeyboardButton('lolibooru.moe', callback_data='lolibooru'))
+
+for source in api.keys():
+    Source_Keyboard.add(InlineKeyboardButton(source[8:], callback_data=source))
 
 GeneralMenu = InlineKeyboardMarkup()
 GeneralMenu.row(

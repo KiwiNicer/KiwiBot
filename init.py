@@ -1,5 +1,5 @@
 import logging
-
+import json
 import sqlalchemy as db
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -7,9 +7,8 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 import Token as token
 
-moebooru = ['yandere', 'konachan', 'lolibooru']
-booru = ['danbooru']
-
+with open('API/API.json', 'r') as file:
+            api = json.load(file)
 
 bot = Bot(token.token)
 storage = MemoryStorage()
@@ -24,7 +23,7 @@ metadata = db.MetaData()
 main = db.Table('main', metadata,
                 db.Column('Id', db.Integer(), primary_key=True),
                 db.Column('Nickname', db.String(255), nullable=False),
-                db.Column('Source', db.String(255), nullable=False, default='yandere'),
+                db.Column('Source', db.String(255), nullable=False, default='https://yande.re'),
                 db.Column('Count', db.Integer(), nullable=False, default=1),
                 )
 
