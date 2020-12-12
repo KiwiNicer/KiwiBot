@@ -32,8 +32,12 @@ async def in_last(query):
     if query.query == '':
         PhotoTemp = []
         for item in engine.connect().execute(main.select().where(main.c.Id == query.from_user.id)):
+            if item.Source == 'https://gelbooru.com':
+                random = ' sort:random'
+            else:
+                random = ' order:random'
             obj = Imageboards(syte=item.Source)
-            for source_item in obj.getImages(limit=20, tags=' order:random', s='random'):
+            for source_item in obj.getImages(limit=20, tags=random, s='random'):
                 PhotoTemp.append(InlineQueryResultPhoto(
                     id=source_item["id"],
                     thumb_url=source_item["file_url"],
@@ -43,8 +47,12 @@ async def in_last(query):
     else:
         PhotoTemp = []
         for item in engine.connect().execute(main.select().where(main.c.Id == query.from_user.id)):
+            if item.Source == 'https://gelbooru.com':
+                random = ' sort:random'
+            else:
+                random = ' order:random'
             obj = Imageboards(syte=item.Source)
-            for source_item in obj.getImages(limit=20, tags=query.query):
+            for source_item in obj.getImages(limit=20, tags=query.query + random):
                 PhotoTemp.append(InlineQueryResultPhoto(
                     id=source_item["id"],
                     thumb_url=source_item["file_url"],

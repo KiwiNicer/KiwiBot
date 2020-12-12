@@ -15,7 +15,11 @@ async def random_art(message: types.Message):
     for item in engine.connect().execute(main.select().where(main.c.Id == message.from_user.id)):
         obj = Imageboards(syte=item.Source)
         try:
-            for source_item in obj.getImages(limit=item.Count, tags=' order:random', s='random'):
+            if item.Source == 'https://gelbooru.com':
+                random = ' sort:random'
+            else:
+                random = ' order:random'
+            for source_item in obj.getImages(limit=item.Count, tags=random, s='random'):
                 await bot.send_chat_action(message.chat.id, 'upload_photo')
                 Download_Keyboard = InlineKeyboardMarkup()
                 Download_Keyboard.row(
