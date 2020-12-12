@@ -37,11 +37,11 @@ async def in_last(query):
             else:
                 random = ' order:random'
             obj = Imageboards(syte=item.Source)
-            for source_item in obj.getImages(limit=20, tags=random, s='random'):
+            for source_item in obj.getImagesUrl(limit=20, tags=random, s='random'):
                 PhotoTemp.append(InlineQueryResultPhoto(
                     id=source_item["id"],
-                    thumb_url=source_item["file_url"],
-                    photo_url=source_item["file_url"]))
+                    thumb_url=source_item["url"],
+                    photo_url=source_item["url"]))
         logging.info(str(query.from_user.username) + ' | Инлайн режим | Рандом')
         await bot.answer_inline_query(query.id, results=PhotoTemp, cache_time=10)
     else:
@@ -52,11 +52,11 @@ async def in_last(query):
             else:
                 random = ' order:random'
             obj = Imageboards(syte=item.Source)
-            for source_item in obj.getImages(limit=20, tags=query.query + random):
+            for source_item in obj.getImagesUrl(limit=20, tags=query.query + random):
                 PhotoTemp.append(InlineQueryResultPhoto(
                     id=source_item["id"],
-                    thumb_url=source_item["file_url"],
-                    photo_url=source_item["file_url"]))
+                    thumb_url=source_item["url"],
+                    photo_url=source_item["url"]))
         logging.info(str(query.from_user.username) + ' | Инлайн режим | Поиск по тегу ' + query.query)
         await bot.answer_inline_query(query.id, results=PhotoTemp, cache_time=10)
 
