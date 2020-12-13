@@ -14,7 +14,7 @@ async def get_command(message: types.Message):
         soup = BeautifulSoup(requests.get(message.get_args().split()[0]).text, features="html5lib")
         images = soup.findAll(id="image")
         await bot.send_chat_action(message.chat.id, 'upload_document')
-        await bot.send_document(message.chat.id, images[0]['src'])
+        await bot.send_document(message.chat.id, images[0]['src'], reply_to_message_id=message.message_id)
         logging.info(str(message.from_user.username) + ' | Отправление арта по ссылке')
     except Exception as err:
         logging.error(str(message.from_user.username) + ' | Отправление арта по ссылке | ' + str(err))
