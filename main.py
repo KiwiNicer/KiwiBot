@@ -16,6 +16,7 @@ from handlers.settings import (Close_callback, Close_message, Count_Checker,
 from keyboards.keyboard import (Count_ReplyKeyboard, GeneralMenu,
                                 Source_Keyboard, Start_ReplyKeyboard)
 from handlers.start import start_command
+from handlers.get_art import get_command
 from handlers.find_art import find_art
 
 
