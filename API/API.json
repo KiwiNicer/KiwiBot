@@ -3,5 +3,6 @@
     "https://konachan.net":"/post.json?tags=rating:s",
     "https://lolibooru.moe":"/post.json?tags=rating:s",
     "https://danbooru.donmai.us":"/posts.json?tags=rating:s",
-    "https://gelbooru.com":"/index.php?page=dapi&s=post&q=index&json=1&tags=rating:safe"
+    "https://gelbooru.com":"/index.php?page=dapi&s=post&q=index&json=1&tags=rating:safe",
+    "https://hypnohub.net":"/post/index.json?tags=rating:s"
 }
