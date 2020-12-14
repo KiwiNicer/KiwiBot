@@ -3,7 +3,7 @@ import json
 import sqlalchemy as db
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, BotCommand
 
 import Token as token
 
@@ -44,6 +44,14 @@ def check_db():
     results = connection.execute(db.select([main]))
     for row in results:
         print(row)
+
+async def initBot(dispatcher: Dispatcher):
+    await bot.set_my_commands([
+        BotCommand("last","Последний арт"), 
+        BotCommand("random", "Случайный арт"), 
+        BotCommand("get", "Арт по ссылке"), 
+        BotCommand("settings", "Настройки")
+        ])
 
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)

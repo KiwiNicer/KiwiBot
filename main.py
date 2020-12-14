@@ -6,7 +6,7 @@ from aiogram.types import InlineQueryResultPhoto
 
 from API.Imageboards import Imageboards
 
-from init import bot, dp, engine, main
+from init import bot, dp, engine, main, initBot
 import Token
 from handlers.last_art import last_art
 from handlers.random_art import random_art
@@ -67,5 +67,6 @@ async def shutdown(dispatcher: Dispatcher):
     return requests.get('https://api.telegram.org/bot' + Token.token + '/sendMessage?chat_id=360862309&text=Я упаль')
 
 
+
 if __name__ == "__main__":
-    executor.start_polling(dp, skip_updates=True, on_shutdown=shutdown)
+    executor.start_polling(dp, skip_updates=True, on_shutdown=shutdown, on_startup=initBot)
