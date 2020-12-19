@@ -1,5 +1,4 @@
-import logging
-
+from loguru import logger as logging
 import requests
 from aiogram import Dispatcher, executor, types
 from aiogram.types import InlineQueryResultPhoto

@@ -1,4 +1,4 @@
-import logging
+from loguru import logger as logging
 
 from aiogram import types
 from init import add_new_user, dp

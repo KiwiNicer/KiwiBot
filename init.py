@@ -1,4 +1,4 @@
-import logging
+from loguru import logger as logging
 import json
 import sqlalchemy as db
 from aiogram import Bot, Dispatcher
@@ -52,6 +52,3 @@ async def initBot(dispatcher: Dispatcher):
         BotCommand("get", "Арт по ссылке"), 
         BotCommand("settings", "Настройки")
         ])
-
-
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)

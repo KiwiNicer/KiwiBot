@@ -1,4 +1,4 @@
-import logging
+from loguru import logger as logging
 
 import requests
 from aiogram import types
